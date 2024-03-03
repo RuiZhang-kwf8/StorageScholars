@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import json
+from django.http import JsonResponse
 
 # Create your views here.
 from django.shortcuts import redirect
@@ -29,16 +31,14 @@ def housing(request):
         return render(request, 'index.html')
     
 def modelmarker(request):
-    # Assuming the user is authenticated
-    if request.method == 'POST':
         # Parse the JSON data sent from the frontend
-        data = request.body
-
+        
+        data = json.loads(request.body.decode('utf-8'))
+        
         # Access the individual parameters
         address = data.get('address')
         mapID = data.get('mapID')
         user = data.get('user')
-
 
         # Now you can do whatever you need to do with the data
         # For example, you can save it to the database
@@ -49,7 +49,4 @@ def modelmarker(request):
         marker.save()
 
         # Respond with a success message
-        return render(request, 'listing.html', {'username': username})
-    else:
-        # Respond with an error if the request method is not POST
-        return render(request, 'findhousing.html', {'username': username})
+        return render(request, 'listing.html', {'username': user})

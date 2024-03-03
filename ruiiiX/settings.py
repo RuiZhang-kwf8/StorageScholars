@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'ruiiiX.urls'
@@ -91,8 +92,12 @@ WSGI_APPLICATION = 'ruiiiX.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'storagescholars1',
+        'USER': 'postgres',
+        'PASSWORD': '039210',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -156,7 +161,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-SITE_ID = 6
+SITE_ID = 7
 
 LOGIN_REDIRECT_URL = '/userdashboard'
 LOGOUT_REDIRECT_URL = '/'
