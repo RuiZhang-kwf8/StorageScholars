@@ -67,7 +67,6 @@
         <button class="header-button" onclick="window.location.href='/chat/{{username}}';">Chat</button>
         <button class="header-button" onclick="window.location.href='/logout';">Logout</button>
 
-
     </div>
 
     <!-- Map container -->
@@ -77,12 +76,14 @@
 
     <script>
         // Initialize and display the map
+        let map;
+        let infoWindow;
         function initMap() {
             // Specify the latitude and longitude coordinates for New York City
             var nycLatLng = {lat: 40.7128, lng: -74.0060}; // New York City coordinates
 
             // Create a new map instance
-            var map = new google.maps.Map(document.getElementById('map'), {
+            map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 12, // Set the initial zoom level
                 center: nycLatLng // Set the center of the map to New York City
             });
@@ -93,12 +94,53 @@
                 map: map,
                 title: 'New York City' // Marker title (tooltip)
             });
+            infoWindow = new google.maps.InfoWindow();
+
+            fetchMarkers(); 
         }
-        markers.forEach(function(marker) {
-    // Do something with each marker
-        
+    
+  function fetchMarkers() {
+    fetch('/get_markers')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(markers => {
+        // Geocode each address and place markers on the map
+        const geocodePromises = markers.map(marker => {
+            return new Promise((resolve, reject) => {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: marker.address }, function(results, status) {
+                    if (status === 'OK') {
+                        const position = results[0].geometry.location;
+                        const markerObj = new google.maps.Marker({
+                            map: map,
+                            position: position,
+                            title: marker.user // Assuming you want to use the user as the title
+                        });
+                        markerObj.addListener('click', function() {
+                            infoWindow.setContent(`<div><b>Chat with the lister</b><br/><a href="/chat/${marker.user}">Start Chat</a></div>`);
+                            infoWindow.open(map, markerObj);
+                        });
+                        resolve();
+                    } else {
+                        console.error('Geocode was not successful for the following reason:', status);
+                        reject(status);
+                    }
+                });
+            });
+        });
+
+        // Wait for all geocoding promises to resolve
+        return Promise.all(geocodePromises);
+    })
+    .catch(error => {
+        console.error('Error fetching markers:', error);
     });
-        
+}
+    
         
     </script>
     

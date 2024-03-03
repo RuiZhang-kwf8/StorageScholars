@@ -85,7 +85,8 @@
     <!-- Button to the user dashboard -->
     <button class="header-button" onclick="window.location.href='/userdashboard';">User Dashboard</button>
     <!-- Button to logout -->
-    <button class="header-button" onclick="window.location.href='/listing';">Make A Listing</button>
+    <button class="header-button" onclick="window.location.href='/findhousing';">Finding Housing</button>
+
     <button class="header-button" onclick="window.location.href='/chat/{{username}}';">Chat</button>
     <button class="header-button" onclick="window.location.href='/logout';">Logout</button>
 
@@ -146,6 +147,10 @@
                             position: position,
                             title: marker.user // Assuming you want to use the user as the title
                         });
+                        markerObj.addListener('click', function() {
+                            infoWindow.setContent(`<div><b>Chat with the lister</b><br/><a href="/chat/${marker.user}">Start Chat</a></div>`);
+                            infoWindow.open(map, markerObj);
+                        });
                         resolve();
                     } else {
                         console.error('Geocode was not successful for the following reason:', status);
@@ -162,7 +167,6 @@
         console.error('Error fetching markers:', error);
     });
 }
-
     
 
     document.getElementById('houseForm').addEventListener('submit', function(event) {
