@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map</title>
+    <!-- Replace YOUR_API_KEY with your actual Google Maps API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAd63FnT3uHNPRl9tFQjCh4DxvgmWOAL8"></script>
+    <style>
+        /* Specify the size and position of the map container */
+        #map-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1000; /* Ensure the map appears above other content */
+        }
+
+        /* Specify the size of the map */
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Header navigation bar styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Ensure the header appears above the map */
+        }
+
+        .header-button {
+            color: white;
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header navigation bar -->
+    <div class="header">
+        <!-- Button to the home page -->
+        <button class="header-button" onclick="window.location.href='/';">Home</button>
+        <!-- Button to the user dashboard -->
+        <button class="header-button" onclick="window.location.href='/userdashboard';">User Dashboard</button>
+        <!-- Button to logout -->
+        <button class="header-button" onclick="window.location.href='/listing';">Make A Listing</button>
+        <button class="header-button" onclick="window.location.href='/chat/{{username}}';">Chat</button>
+        <button class="header-button" onclick="window.location.href='/logout';">Logout</button>
+
+
+    </div>
+
+    <!-- Map container -->
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script>
+        // Initialize and display the map
+        function initMap() {
+            // Specify the latitude and longitude coordinates for New York City
+            var nycLatLng = {lat: 40.7128, lng: -74.0060}; // New York City coordinates
+
+            // Create a new map instance
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12, // Set the initial zoom level
+                center: nycLatLng // Set the center of the map to New York City
+            });
+
+            // Create a marker and place it on the map
+            var marker = new google.maps.Marker({
+                position: nycLatLng,
+                map: map,
+                title: 'New York City' // Marker title (tooltip)
+            });
+        }
+    </script>
+
+    <!-- Call the initMap function when the page loads -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAd63FnT3uHNPRl9tFQjCh4DxvgmWOAL8&callback=initMap"></script>
+</body>
+</html>

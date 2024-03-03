@@ -1,0 +1,160 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>House Listing Form with Google Maps</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    #map {
+      height: 300px;
+      margin-top: 20px;
+    }
+
+
+        /* Header navigation bar styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Ensure the header appears above the map */
+        }
+
+        .header-button {
+            color: white;
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #0056b3;
+        }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <!-- Button to the home page -->
+    <button class="header-button" onclick="window.location.href='/';">Home</button>
+    <!-- Button to the user dashboard -->
+    <button class="header-button" onclick="window.location.href='/userdashboard';">User Dashboard</button>
+    <!-- Button to logout -->
+    <button class="header-button" onclick="window.location.href='/listing';">Make A Listing</button>
+    <button class="header-button" onclick="window.location.href='/chat/{{username}}';">Chat</button>
+    <button class="header-button" onclick="window.location.href='/logout';">Logout</button>
+
+
+</div>
+  <div class="container">
+    <h2>House Listing Form with Google Maps</h2>
+    <form id="houseForm">
+      <div class="form-group">
+        <label for="header">Header (Include Address):</label>
+        <input type="text" id="header" name="header" required>
+      </div>
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="5" required></textarea>
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+    <div id="map" style="height: 300px; margin-top: 20px;"></div>
+    </div>
+
+<!-- JavaScript code -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAd63FnT3uHNPRl9tFQjCh4DxvgmWOAL8&callback=initMap" async defer></script>
+<script>
+  let map;
+  let infoWindow;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 10,
+      center: { lat: 40.7128, lng: -74.0060 } // Default center
+    });
+
+  }
+
+    document.getElementById('houseForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      infoWindow = new google.maps.InfoWindow({
+      content: `<div><b>Chat with the lister</b><br/><a href="/chat/{{username}}">Start Chat</a></div>`
+    });
+      const geocoder = new google.maps.Geocoder();
+      const address = document.getElementById('header').value;
+
+      geocoder.geocode({ address: address }, function(results, status) {
+
+        if (status == google.maps.GeocoderStatus.OK) {
+          map.setCenter(results[0].geometry.location);
+
+          const marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location,
+            title: address
+          });
+
+          marker.addListener('click', function() {
+            infoWindow.setContent(`<div><b>Chat with the lister</b><br/><a href="/chat/{{username}}">Start Chat</a></div>`);
+            infoWindow.open(map, marker);
+          });
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    });
+
+</script>
+</body>
+</html>
