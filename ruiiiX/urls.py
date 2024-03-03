@@ -30,5 +30,6 @@ urlpatterns = [
     path('findhousing/', views.housing, name = "housing"),
     path('listing/', views.report, name="listing"),
     path('save_marker/', views.modelmarker, name="save_marker"),
+    path('get_markers/', views.get_markers, name="get_markers"),
     path('logout', LogoutView.as_view()),
 ]

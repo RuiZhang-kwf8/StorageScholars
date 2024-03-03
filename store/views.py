@@ -50,3 +50,22 @@ def modelmarker(request):
 
         # Respond with a success message
         return render(request, 'listing.html', {'username': user})
+
+
+    
+def get_markers(request):
+    # Query your database to get the markers
+    markers = Marker.objects.all()  # Assuming you have a Marker model
+
+    # Serialize the marker data
+    serialized_markers = []
+    for marker in markers:
+        serialized_markers.append({
+            'address': marker.address,
+            'mapID': marker.mapID,
+            'user': marker.user,
+            # Add more fields as needed
+        })
+
+    # Return the serialized markers as a JSON response
+    return JsonResponse(serialized_markers, safe=False)
