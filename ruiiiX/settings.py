@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'ruiiiX.urls'
@@ -160,7 +161,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-SITE_ID = 6
+SITE_ID = 7
 
 LOGIN_REDIRECT_URL = '/userdashboard'
 LOGOUT_REDIRECT_URL = '/'

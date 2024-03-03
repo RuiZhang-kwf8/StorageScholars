@@ -149,10 +149,22 @@
           mapID: "AIzaSyCAd63FnT3uHNPRl9tFQjCh4DxvgmWOAL8", 
             user: "{{username}}"
           };
-          fetch('/save_marker', {
+          function getCSRFToken() {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(cookie => cookie.startsWith('csrftoken='))
+        .split('=')[1];
+    return cookieValue;
+}
+
+// Make an AJAX POST request with CSRF token included
+const csrftoken = getCSRFToken();
+
+          fetch('/save_marker/', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken
     },
     body: JSON.stringify(data)
   })
