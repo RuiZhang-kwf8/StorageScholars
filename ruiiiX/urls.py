@@ -29,5 +29,6 @@ urlpatterns = [
     path("chat/<str:chat_box_name>/", chat_box, name="chat"),
     path('findhousing/', views.housing, name = "housing"),
     path('listing/', views.report, name="listing"),
+    path('save_marker/', views.modelmarker, name="save_marker"),
     path('logout', LogoutView.as_view()),
 ]
