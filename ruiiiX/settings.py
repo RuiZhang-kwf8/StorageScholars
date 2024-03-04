@@ -47,12 +47,12 @@ INSTALLED_APPS = [
 
 ]
 
-ASGI_APPLICATION = "ruiiiX.routing.application" #routing.py will be created later
+ASGI_APPLICATION = "ruiiiX.settings" #routing.py will be created later
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': "channels.layers.InMemoryChannelLayer"
-        }
-    }
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+            
             ],
         },
     },
@@ -159,8 +160,24 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 SITE_ID = 7
 
 LOGIN_REDIRECT_URL = '/userdashboard'
