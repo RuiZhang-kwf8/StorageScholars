@@ -14,7 +14,7 @@ pip install allauth
 VENV
 
 
-set up Gmail SMTP 
+set up Gmail SMTP/add daphne to settings
 
 
 
