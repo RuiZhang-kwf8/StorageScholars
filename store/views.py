@@ -8,9 +8,9 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from .models import Marker
 
-def chat_box(request, chat_box_name):
+def chat_box(request, chat_box1):
     # we will get the chatbox name from the url
-    return render(request, "chatbox.html", {"chat_box_name": chat_box_name})
+    return render(request, "chatbox.html", {"box1": chat_box1})
 
 def report(request):
     # Assuming the user is authenticated
