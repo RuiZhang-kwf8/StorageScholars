@@ -1,9 +1,19 @@
 Allowing UVA students to chat about Storage Space renting. Django, PostGresQL, OAuth
 
 Requirements to Run: 
+
+
+
 pip install daphne
+
+
 pip install allauth 
+
+
+
 VENV
+
+
 set up Gmail SMTP 
 
 
