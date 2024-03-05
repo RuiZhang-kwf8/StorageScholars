@@ -13,7 +13,7 @@
     <button onclick="sendMessage()">Send</button>
 
     <script>
-const socket = new WebSocket('ws://' + window.location.host + '/ws/chat/{{chat_box_name}}/');
+const socket = new WebSocket('ws://' + window.location.host + '/ws/chat/{{box1}}/');
 
 socket.onopen = function () {
     console.log("connected")
@@ -31,7 +31,7 @@ socket.onopen = function () {
 
         function sendMessage() {
             const messageInput = document.getElementById('message-input');
-            const message = messageInput.value.trim();
+            const message = messageInput.value;
             if (message !== '') {
                 socket.send(JSON.stringify({ message: message }));
                 messageInput.value = ''; // Clear the input field after sending
