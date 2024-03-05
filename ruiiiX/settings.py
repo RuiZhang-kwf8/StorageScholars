@@ -44,15 +44,20 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'channels',
 ]
 
-ASGI_APPLICATION = "ruiiiX.settings" #routing.py will be created later
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+
+#Gmail SMTP Configuration in Django
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "ruizhangslc2017@gmail.com"
+EMAIL_HOST_PASSWORD = "BananaJuice69$"
+
+ASGI_APPLICATION = "ruiiiX.asgi.application" #routing.py will be created later
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
