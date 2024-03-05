@@ -126,48 +126,134 @@
     infoWindow = new google.maps.InfoWindow();
     fetchMarkers();
   }
+
+
+
+
   function fetchMarkers() {
     fetch('/get_markers')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(markers => {
-        // Geocode each address and place markers on the map
-        const geocodePromises = markers.map(marker => {
-            return new Promise((resolve, reject) => {
-                const geocoder = new google.maps.Geocoder();
-                geocoder.geocode({ address: marker.address }, function(results, status) {
-                    if (status === 'OK') {
-                        const position = results[0].geometry.location;
-                        const markerObj = new google.maps.Marker({
-                            map: map,
-                            position: position,
-                            title: marker.user // Assuming you want to use the user as the title
-                        });
-                        markerObj.addListener('click', function() {
-                            infoWindow.setContent(`<div><b>Chat with the lister</b><br/><a href="/chat/${marker.user}">Start Chat</a></div>`);
-                            infoWindow.open(map, markerObj);
-                        });
-                        resolve();
-                    } else {
-                        console.error('Geocode was not successful for the following reason:', status);
-                        reject(status);
-                    }
-                });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(markers => {
+            // Geocode each address and place markers on the map
+            const geocodePromises = markers.map(marker => {
+                return geocodeMarker(marker);
             });
-        });
 
-        // Wait for all geocoding promises to resolve
-        return Promise.all(geocodePromises);
-    })
-    .catch(error => {
-        console.error('Error fetching markers:', error);
+            // Wait for all geocoding promises to resolve
+            return Promise.all(geocodePromises);
+        })
+        .catch(error => {
+            console.error('Error fetching markers:', error);
+        });
+}
+
+function geocodeMarker(marker) {
+    return new Promise((resolve, reject) => {
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: marker.address }, function(results, status) {
+            if (status === 'OK') {
+                const position = results[0].geometry.location;
+                const markerObj = new google.maps.Marker({
+                    map: map,
+                    position: position,
+                    title: marker.user // Assuming you want to use the user as the title
+                });
+
+                attachMarkerClickHandler(markerObj, marker);
+                resolve();
+            } else {
+                console.error('Geocode was not successful for the following reason:', status);
+                reject(status);
+            }
+        });
     });
 }
-    
+
+function attachMarkerClickHandler(markerObj, marker) {
+    markerObj.addListener('click', function() {
+        fetchUserEmail(marker)
+            .then(userEmail => {
+                const chatLinkWithEmail = `http://localhost:8000/chat/${marker.user}`;
+
+                infoWindow.setContent(`<div><b>Chat with the lister</b><br/><a href="/chat/${marker.user}" id="startChatLink">Start Chat</a></div>`);
+                infoWindow.open(map, markerObj);
+
+                // Attach click event handler to the chat link
+                document.getElementById('startChatLink').addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior (opening a new page)
+
+                    sendEmail(userEmail, `http://localhost:8000/chat/${marker.user}`);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching user email:', error);
+            });
+    });
+}
+
+function fetchUserEmail(marker) {
+    return fetch(`/get-user-email/${marker.user}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data.email; // Assuming your response contains the user's email
+        });
+}
+
+function sendEmail(recipient, chatLink) {
+    fetch('/send-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            recipient: recipient,
+            chatLink: chatLink,
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log('Email sent successfully');
+        })
+        .catch(error => {
+            console.error('Error sending email:', error);
+        });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     document.getElementById('houseForm').addEventListener('submit', function(event) {
       event.preventDefault(); // Prevent form submission
