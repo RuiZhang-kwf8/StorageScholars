@@ -1,7 +1,9 @@
-Allowing UVA students to chat about Storage Space renting. Django, PostGresQL, OAuth
+Allowing UVA students to chat about Storage Space renting.
 
 Requirements to Run: 
 
+
+setup oauth console + postgres for DJango
 
 
 pip install daphne
