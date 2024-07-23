@@ -18,6 +18,8 @@ VENV
 
 set up Gmail SMTP/add daphne to settings
 
+this thing does not work and i gave up on it 
+
 
 
 
